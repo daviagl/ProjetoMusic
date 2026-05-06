@@ -1,3 +1,3 @@
-# musicbox_application
+# Pleasant Waves
 
 A new Flutter project.
