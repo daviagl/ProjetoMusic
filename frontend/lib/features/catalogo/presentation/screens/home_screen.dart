@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/star_row.dart';
-import '../../data/repositories/albums_repository.dart';
+import '../../../../core/app_router.dart';
 import '../../domain/models/album_model.dart';
 
 class HomeScreen extends StatefulWidget {

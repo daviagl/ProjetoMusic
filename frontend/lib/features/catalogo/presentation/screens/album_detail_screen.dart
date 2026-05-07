@@ -1,8 +1,104 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../data/repositories/albums_repository.dart';
 import '../../domain/models/album_model.dart';
 import '../../domain/models/review_model.dart';
+
+final Map<String, List<Review>> _kReviews = {
+  'led-iv': [
+    const Review(
+      user: 'MetaleiroBR320',
+      stars: 5,
+      text:
+          'Stairway to Heaven é uma das músicas mais perfeitas já gravadas. O álbum inteiro é uma obra de arte.',
+      date: '2d atrás',
+    ),
+    const Review(
+      user: 'Cabeça-de-Album240',
+      stars: 5,
+      text:
+          'Cada faixa é um universo. Led Zeppelin IV redefiniu o rock para sempre.',
+      date: '1sem atrás',
+    ),
+  ],
+  'master-of-puppets': [
+    const Review(
+      user: 'CharlieBrown1990',
+      stars: 5,
+      text:
+          'O thrash metal em sua forma mais pura. Battery + Master of Puppets = perfeição.',
+      date: '3d atrás',
+    ),
+  ],
+  'back-in-black': [
+    const Review(
+      user: 'RoqueiroBaiano',
+      stars: 5,
+      text:
+          'O riff de Back in Black é um dos mais icônicos da história do rock. O álbum é um marco para a banda.',
+      date: '5d atrás',
+    ),
+  ],
+  'the-dark-side-of-the-moon': [
+    const Review(
+      user: 'ApreciadorDeRock2000',
+      stars: 5,
+      text:
+          'Uma jornada sonora incrível. The Dark Side of the Moon é um dos álbuns mais impactantes da história do rock.',
+      date: '1m atrás',
+    ),
+  ],
+  'abbey-road': [
+    const Review(
+      user: 'Irmao_do_PaulMcCartney',
+      stars: 5,
+      text:
+          'Um dos álbuns mais influentes da história do rock. A capa é uma obra de arte.',
+      date: '2m atrás',
+    ),
+  ],
+  'rumours': [
+    const Review(
+      user: 'fleetwood_fanNumeroUm',
+      stars: 5,
+      text:
+          'As canções de Rumours são tão pessoais e emocionantes. Um álbum que resiste ao tempo.',
+      date: '3m atrás',
+    ),
+  ],
+  'hotel-california': [
+    const Review(
+      user: 'EagleEye',
+      stars: 5,
+      text:
+          'Hotel California é um clássico atemporal. A faixa-título é uma das melhores da história do rock.',
+      date: '4m atrás',
+    ),
+  ],
+};
+
+List<Review> _getReviews(String albumId) =>
+    List.unmodifiable(_kReviews[albumId] ?? []);
+
+Review? _getMyReview(String albumId) {
+  try {
+    return (_kReviews[albumId] ?? []).firstWhere((r) => r.isMine);
+  } catch (_) {
+    return null;
+  }
+}
+
+bool _hasMyReview(String albumId) => _getMyReview(albumId) != null;
+
+void _addOrUpdateMyReview(String albumId, Review review) {
+  final list = List<Review>.from(_kReviews[albumId] ?? []);
+  final idx = list.indexWhere((r) => r.isMine);
+  if (idx >= 0) {
+    list[idx] = review;
+  } else {
+    list.insert(0, review);
+  }
+  _kReviews[albumId] = list;
+}
 
 class AlbumDetailScreen extends StatefulWidget {
   final Album album;
@@ -15,12 +111,9 @@ class AlbumDetailScreen extends StatefulWidget {
 class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   bool _isFavorited = false;
 
-  List<Review> get _reviews =>
-      ReviewRepository.instance.getReviews(widget.album.id);
-  bool get _hasMyReview =>
-      ReviewRepository.instance.hasMyReview(widget.album.id);
-  Review? get _myReview =>
-      ReviewRepository.instance.getMyReview(widget.album.id);
+  List<Review> get _reviews => _getReviews(widget.album.id);
+  bool get _myReviewExists => _hasMyReview(widget.album.id);
+  Review? get _myReview => _getMyReview(widget.album.id);
 
   void _toggleFavorite() => setState(() => _isFavorited = !_isFavorited);
 
@@ -34,10 +127,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
             album: widget.album,
             existingReview: _myReview,
             onSubmit: (review) {
-              ReviewRepository.instance.addOrUpdateMyReview(
-                widget.album.id,
-                review,
-              );
+              _addOrUpdateMyReview(widget.album.id, review);
               setState(() {});
             },
           ),
@@ -167,12 +257,12 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                 height: 48,
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _hasMyReview ? C.card : C.accent,
-                    foregroundColor: _hasMyReview ? C.accent : Colors.white,
+                    backgroundColor: _myReviewExists ? C.card : C.accent,
+                    foregroundColor: _myReviewExists ? C.accent : Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                       side:
-                          _hasMyReview
+                          _myReviewExists
                               ? const BorderSide(color: C.accent, width: 1)
                               : BorderSide.none,
                     ),
@@ -183,7 +273,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                     ),
                   ),
                   label: Text(
-                    _hasMyReview ? 'EDITAR MEU REVIEW' : 'ADICIONAR REVIEW',
+                    _myReviewExists ? 'EDITAR MEU REVIEW' : 'ADICIONAR REVIEW',
                   ),
                   onPressed: _openReviewModal,
                 ),

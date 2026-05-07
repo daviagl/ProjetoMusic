@@ -3,12 +3,74 @@ import 'package:go_router/go_router.dart';
 import '../features/autenticacao/domain/models/usuario_model.dart';
 import '../features/autenticacao/presentation/screens/login_screen.dart';
 import '../features/autenticacao/presentation/screens/register_screen.dart';
-import '../features/catalogo/data/repositories/albums_repository.dart';
+import '../features/catalogo/domain/models/album_model.dart';
 import '../features/catalogo/presentation/screens/album_detail_screen.dart';
 import '../features/catalogo/presentation/screens/root_page.dart';
 import 'theme/app_theme.dart';
 
-/// Única fonte de verdade para autenticação na aplicação.
+final List<Album> kAlbums = [
+  const Album(
+    id: 'the-dark-side-of-the-moon',
+    abbr: 'DSOTM',
+    title: 'The Dark Side of the Moon',
+    artist: 'Pink Floyd',
+    year: 1973,
+    rating: 4.9,
+    ratingCount: '10.5k',
+    genre: 'Progressive Rock',
+    about:
+        'O oitavo álbum de estúdio da banda britânica Pink Floyd, lançado em 1973. Conhecido por sua produção inovadora e temas filosóficos, é um dos álbuns mais vendidos e aclamados de todos os tempos.',
+    colorValue: 0xFF000000,
+  ),
+  const Album(
+    id: 'abbey-road',
+    abbr: 'AR',
+    title: 'Abbey Road',
+    artist: 'The Beatles',
+    year: 1969,
+    rating: 4.8,
+    ratingCount: '9.8k',
+    genre: 'Rock',
+    about:
+        'O décimo primeiro álbum de estúdio da banda britânica The Beatles, lançado em 1969. Conhecido por sua icônica capa e por faixas como "Come Together" e "Here Comes the Sun".',
+    colorValue: 0xFF1A2A3A,
+  ),
+  const Album(
+    id: 'rumours',
+    abbr: 'RUM',
+    title: 'Rumours',
+    artist: 'Fleetwood Mac',
+    year: 1977,
+    rating: 4.8,
+    ratingCount: '10.2k',
+    genre: 'Rock',
+    about:
+        'O décimo primeiro álbum de estúdio da banda britânica-americana Fleetwood Mac, lançado em 1977. Conhecido por suas canções sobre relacionamentos turbulentos e por ser um dos álbuns mais vendidos de todos os tempos.',
+    colorValue: 0xFF3A2A1A,
+  ),
+  const Album(
+    id: 'hotel-california',
+    abbr: 'HC',
+    title: 'Hotel California',
+    artist: 'Eagles',
+    year: 1976,
+    rating: 4.8,
+    ratingCount: '9.6k',
+    genre: 'Rock',
+    about:
+        'O quinto álbum de estúdio da banda americana Eagles, lançado em 1976. Conhecido por sua faixa-título e por ser um dos álbuns mais vendidos de todos os tempos.',
+    colorValue: 0xFF2A3A1A,
+  ),
+];
+
+Album? findAlbumById(String id) {
+  try {
+    return kAlbums.firstWhere((a) => a.id == id);
+  } catch (_) {
+    return null;
+  }
+}
+
 class Auth extends ChangeNotifier {
   Auth._();
   static final Auth instance = Auth._();
