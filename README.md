@@ -1,3 +1,3 @@
 # Pleasant Waves
 
-A new Flutter project.
+Aplicativo para ver Reviews de musica!
