@@ -1,6 +1,6 @@
 {
-    "name": "musicbox_application",
-    "short_name": "musicbox_application",
+    "name": "PleasantWaves",
+    "short_name": "PleasantWaves",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

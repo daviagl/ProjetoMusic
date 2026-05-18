@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "musicbox_application" "\0"
+            VALUE "FileDescription", "PleasantWaves" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "musicbox_application" "\0"
+            VALUE "InternalName", "PleasantWaves" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "musicbox_application.exe" "\0"
-            VALUE "ProductName", "musicbox_application" "\0"
+            VALUE "OriginalFilename", "PleasantWaves.exe" "\0"
+            VALUE "ProductName", "PleasantWaves" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
