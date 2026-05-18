@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../features/autenticacao/domain/models/usuario_model.dart';
 import '../features/autenticacao/presentation/screens/login_screen.dart';
 import '../features/autenticacao/presentation/screens/register_screen.dart';
 import '../features/catalogo/domain/models/album_model.dart';
 import '../features/catalogo/presentation/screens/album_detail_screen.dart';
 import '../features/catalogo/presentation/screens/root_page.dart';
+import 'di/service_locator.dart';
+import 'providers/auth_notifier.dart';
 import 'theme/app_theme.dart';
 
 final List<Album> kAlbums = [
@@ -71,48 +72,18 @@ Album? findAlbumById(String id) {
   }
 }
 
-class Auth extends ChangeNotifier {
-  Auth._();
-  static final Auth instance = Auth._();
-
-  bool _autenticado = false;
-  Usuario? _usuarioAtual;
-
-  bool get autenticado => _autenticado;
-  Usuario? get usuarioAtual => _usuarioAtual;
-
-  Future<bool> login(String email, String senha) async {
-    await Future.delayed(const Duration(milliseconds: 900));
-    if (senha != 'admin') return false;
-    _autenticado = true;
-    _usuarioAtual = Usuario(id: '1', nome: 'username', email: email);
-    notifyListeners();
-    return true;
-  }
-
-  Future<void> register(String nome, String email) async {
-    await Future.delayed(const Duration(milliseconds: 900));
-    _autenticado = true;
-    _usuarioAtual = Usuario(id: '1', nome: nome, email: email);
-    notifyListeners();
-  }
-
-  void logout() {
-    _autenticado = false;
-    _usuarioAtual = null;
-    notifyListeners();
-  }
-}
+AuthNotifier get authNotifier => sl<AuthNotifier>();
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/login',
-  refreshListenable: Auth.instance,
+  refreshListenable: authNotifier,
   redirect: (BuildContext context, GoRouterState state) {
     final isAuthRoute =
-        state.matchedLocation == '/login' ||
-        state.matchedLocation == '/register';
-    if (!Auth.instance.autenticado && !isAuthRoute) return '/login';
-    if (Auth.instance.autenticado && isAuthRoute) return '/home';
+        state.matchedLocation == '/login' || state.matchedLocation == '/register';
+    if (!authNotifier.autenticado && !isAuthRoute)
+     return '/login';
+    if (authNotifier.autenticado && isAuthRoute) 
+      return '/home';
     return null;
   },
   routes: [

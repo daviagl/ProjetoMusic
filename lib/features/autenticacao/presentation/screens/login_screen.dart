@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/app_router.dart';
+import '../../../../core/providers/auth_notifier.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -31,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _carregando = true);
 
-    final sucesso = await Auth.instance.login(
+    final sucesso = await context.read<AuthNotifier>().login(
       _emailCtrl.text.trim(),
       _senhaCtrl.text,
     );

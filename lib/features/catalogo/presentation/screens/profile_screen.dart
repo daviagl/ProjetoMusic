@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/app_router.dart';
+import '../../../../core/providers/auth_notifier.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -47,7 +48,8 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext ctx) {
     final top = MediaQuery.of(ctx).padding.top;
-    final usuario = Auth.instance.usuarioAtual;
+    final auth = ctx.watch<AuthNotifier>();
+    final usuario = auth.usuarioAtual;
     final nomeDisplay = usuario?.nome ?? 'Usuário';
     final inicial = nomeDisplay.isNotEmpty ? nomeDisplay[0].toUpperCase() : 'U';
 
@@ -117,7 +119,7 @@ class ProfileScreen extends StatelessWidget {
                           ),
                     );
                     if (confirmar == true) {
-                      Auth.instance.logout();
+                      ctx.read<AuthNotifier>().logout();
                       ctx.go('/login');
                     }
                   },

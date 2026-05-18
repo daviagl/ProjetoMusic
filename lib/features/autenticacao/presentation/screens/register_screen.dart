@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/app_router.dart';
+import '../../../../core/providers/auth_notifier.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -40,7 +41,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _registrar() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _carregando = true);
-    await Auth.instance.register(_nomeCtrl.text.trim(), _emailCtrl.text.trim());
+    await context.read<AuthNotifier>().register(
+      _nomeCtrl.text.trim(),
+      _emailCtrl.text.trim(),
+    );
     if (!mounted) return;
     setState(() => _carregando = false);
   }
